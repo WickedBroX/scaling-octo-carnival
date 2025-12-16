@@ -1,0 +1,107 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Soft UI / Neumorphism Theme Colors */
+    --background: 210 20% 93%; /* #e0e5ec */
+    --foreground: 215 15% 30%; /* Darker slate */
+
+    --card: 210 20% 93%;
+    --card-foreground: 215 15% 30%;
+
+    --popover: 210 20% 93%;
+    --popover-foreground: 215 15% 30%;
+
+    --primary: 215 25% 27%; /* Dark color for primary text/buttons */
+    --primary-foreground: 210 20% 98%;
+
+    --secondary: 210 20% 90%;
+    --secondary-foreground: 215 25% 27%;
+
+    --muted: 210 20% 88%;
+    --muted-foreground: 215 15% 45%;
+
+    --accent: 210 20% 90%;
+    --accent-foreground: 215 25% 27%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 215 15% 85%;
+    --input: 215 15% 85%;
+    --ring: 215 25% 27%;
+
+    --radius: 1rem; /* rounded-2xl */
+  }
+
+  .dark {
+    /* Optional Dark Mode - Keeping it similar but darker */
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+}
+
+/* Neumorphic Utilities */
+@layer utilities {
+  .neu-flat {
+    background: #e0e5ec;
+    box-shadow:
+      9px 9px 16px rgb(163,177,198,0.6),
+      -9px -9px 16px rgba(255,255,255, 0.5);
+  }
+
+  .neu-pressed {
+    background: #e0e5ec;
+    box-shadow:
+      inset 6px 6px 10px 0 rgba(163,177,198, 0.7),
+      inset -6px -6px 10px 0 rgba(255,255,255, 0.8);
+  }
+
+  .neu-btn {
+    @apply rounded-2xl bg-background transition-all duration-200 active:scale-95;
+    box-shadow:
+      6px 6px 10px 0 rgba(163,177,198, 0.5),
+      -6px -6px 10px 0 rgba(255,255,255, 0.8);
+  }
+
+  .neu-btn:active {
+    box-shadow:
+      inset 4px 4px 8px 0 rgba(163,177,198, 0.5),
+      inset -4px -4px 8px 0 rgba(255,255,255, 0.8);
+  }
+
+  .neu-card {
+    @apply rounded-2xl bg-background border-none;
+    box-shadow:
+      9px 9px 16px rgb(163,177,198,0.5),
+      -9px -9px 16px rgba(255,255,255, 0.5);
+  }
+}
