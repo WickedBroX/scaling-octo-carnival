@@ -88,12 +88,12 @@ export default function Home() {
                   </span>
               )}
             </CardContent>
-            <CardFooter className="bg-secondary/20 p-4 flex justify-between items-center">
+            <CardFooter className="bg-muted/50 p-4 flex justify-between items-center">
               <div className="flex space-x-2">
                  <Button
                     variant="ghost"
                     size="icon"
-                    className="neu-btn w-10 h-10 rounded-full hover:text-destructive active:text-destructive"
+                    className="w-10 h-10 rounded-full hover:text-destructive hover:bg-destructive/10"
                     onClick={() => handleLike(quote.id)}
                  >
                     <Heart size={18} />
@@ -101,14 +101,14 @@ export default function Home() {
                  <Button
                     variant="ghost"
                     size="icon"
-                    className="neu-btn w-10 h-10 rounded-full"
+                    className="w-10 h-10 rounded-full"
                     onClick={() => handleShare(quote.id)}
                  >
-                    <Share2 size={18} className="text-primary" />
+                    <Share2 size={18} />
                  </Button>
               </div>
               <Button
-                variant="neumorphic"
+                variant="outline"
                 size="sm"
                 onClick={() => handleEdit(quote)}
                 className="text-xs"

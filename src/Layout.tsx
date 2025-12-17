@@ -25,7 +25,7 @@ export default function Layout() {
             className={({ isActive }) =>
               cn(
                 "flex flex-col items-center justify-center w-12 h-12 rounded-2xl transition-all duration-200",
-                isActive ? "neu-pressed text-primary" : "text-muted-foreground hover:text-primary"
+                isActive ? "text-primary bg-accent" : "text-muted-foreground hover:text-primary"
               )
             }
           >
@@ -37,7 +37,7 @@ export default function Layout() {
             className={({ isActive }) =>
               cn(
                 "flex flex-col items-center justify-center w-12 h-12 rounded-2xl transition-all duration-200",
-                isActive ? "neu-pressed text-primary" : "text-muted-foreground hover:text-primary"
+                isActive ? "text-primary bg-accent" : "text-muted-foreground hover:text-primary"
               )
             }
           >
@@ -49,7 +49,7 @@ export default function Layout() {
             className={({ isActive }) =>
               cn(
                 "flex flex-col items-center justify-center w-14 h-14 rounded-2xl transition-all duration-200 -mt-6",
-                isActive ? "neu-pressed text-primary" : "neu-btn text-primary"
+                isActive ? "text-primary bg-accent" : "text-primary bg-primary/10 hover:bg-accent"
               )
             }
           >
@@ -61,7 +61,7 @@ export default function Layout() {
             className={({ isActive }) =>
               cn(
                 "flex flex-col items-center justify-center w-12 h-12 rounded-2xl transition-all duration-200",
-                isActive ? "neu-pressed text-primary" : "text-muted-foreground hover:text-primary"
+                isActive ? "text-primary bg-accent" : "text-muted-foreground hover:text-primary"
               )
             }
           >
@@ -73,7 +73,7 @@ export default function Layout() {
             className={({ isActive }) =>
               cn(
                 "flex flex-col items-center justify-center w-12 h-12 rounded-2xl transition-all duration-200",
-                isActive ? "neu-pressed text-primary" : "text-muted-foreground hover:text-primary"
+                isActive ? "text-primary bg-accent" : "text-muted-foreground hover:text-primary"
               )
             }
           >
