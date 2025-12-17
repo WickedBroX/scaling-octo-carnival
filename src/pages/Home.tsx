@@ -82,9 +82,9 @@ export default function Home() {
               <p className="text-sm text-muted-foreground font-semibold uppercase tracking-wider">
                 — {quote.author}
               </p>
-              {quote.subcategory_name && (
+              {quote.category_name && (
                   <span className="text-xs px-2 py-1 bg-white/50 rounded-full text-muted-foreground">
-                      {quote.subcategory_name}
+                      {quote.category_name}
                   </span>
               )}
             </CardContent>

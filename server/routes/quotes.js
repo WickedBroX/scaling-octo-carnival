@@ -132,4 +132,38 @@ router.get('/discovery', async (req, res) => {
     }
 });
 
+// GET /api/quotes/search
+router.get('/search', async (req, res) => {
+    try {
+        const { q } = req.query;
+        if (!q) {
+            return res.json([]);
+        }
+
+        const db = await getDb();
+        // Simple case-insensitive search
+        // pg-mem supports ILIKE? Yes, usually.
+        // We search in Quote Text, Author, Subcategory Name, Category Name
+        const searchTerm = `%${q}%`;
+
+        const result = await db.query(`
+            SELECT q.*, s.name as subcategory_name, c.name as category_name
+            FROM quotes q
+            JOIN subcategories s ON q.subcategory_id = s.id
+            JOIN categories c ON s.category_id = c.id
+            WHERE
+                q.text ILIKE $1 OR
+                q.author ILIKE $1 OR
+                s.name ILIKE $1 OR
+                c.name ILIKE $1
+            LIMIT 50
+        `, [searchTerm]);
+
+        res.json(result.rows);
+    } catch (err) {
+        console.error('Error searching quotes:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 module.exports = router;

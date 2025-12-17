@@ -74,6 +74,13 @@ export const getDiscovery = async () => {
     return res.data;
 };
 
+export const searchQuotes = async (query: string) => {
+    const res = await api.get<Quote[]>('/quotes/search', {
+        params: { q: query }
+    });
+    return res.data;
+};
+
 export const recordInteraction = async (quoteId: number, interactionType: 'view' | 'like' | 'remix' | 'share') => {
     const userId = getUserId();
     await api.post('/interactions', {
