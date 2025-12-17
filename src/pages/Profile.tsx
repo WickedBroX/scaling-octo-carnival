@@ -6,15 +6,27 @@ import { useEffect, useState } from 'react';
 
 export default function Profile() {
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem('quote-flow-user') || '{}');
+  // Safe parsing of user from localStorage
+  const [user, setUser] = useState<{ email?: string }>({});
   const [designs, setDesigns] = useState<SavedDesign[]>([]);
 
   useEffect(() => {
+    try {
+      const storedUser = localStorage.getItem('quote-flow-user');
+      if (storedUser) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setUser(JSON.parse(storedUser));
+      }
+    } catch (e) {
+      console.error("Failed to parse user", e);
+    }
+
     setDesigns(getDesigns());
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('quote-flow-user');
+    setUser({});
     navigate('/auth');
   };
 

@@ -32,15 +32,20 @@ export default function Editor() {
     if (designId) {
       const saved = getDesignById(designId);
       if (saved) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setText(saved.text);
+
         setAuthor(saved.author);
+
         setFontFamily(saved.fontFamily);
+
         setTextColor(saved.textColor);
+
         setBgColor(saved.bgColor);
+
         setBgImage(saved.bgImage);
+
         setOverlayOpacity(saved.overlayOpacity || 0);
-        // If it has an image, we assume gradient is off, or restore logic if needed
-        // For simplicity, saved.bgImage takes precedence
       }
     }
   }, [designId]);
@@ -91,9 +96,6 @@ export default function Editor() {
       bgImage,
       overlayOpacity
     }, designId || undefined);
-
-    // Optionally redirect or show toast
-    // navigate('/profile');
     alert("Design saved to Profile!");
   };
 
