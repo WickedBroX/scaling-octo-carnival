@@ -153,10 +153,10 @@ export default function Editor() {
           <p className="text-muted-foreground text-sm">Design your masterpiece.</p>
         </div>
         <div className="flex gap-2">
-           <Button variant="ghost" size="icon" onClick={handleSave} className="neu-btn text-primary w-10 h-10">
+           <Button variant="ghost" size="icon" onClick={handleSave} className="text-primary w-10 h-10">
              <Save size={18} />
            </Button>
-           <Button variant="ghost" size="icon" onClick={handleShare} className="neu-btn text-primary w-10 h-10">
+           <Button variant="ghost" size="icon" onClick={handleShare} className="text-primary w-10 h-10">
              <Share2 size={18} />
            </Button>
         </div>
@@ -166,7 +166,7 @@ export default function Editor() {
       <div className="flex justify-center">
         <div
           ref={canvasRef}
-          className="w-full aspect-square neu-card flex flex-col items-center justify-center p-8 text-center transition-all duration-300 relative overflow-hidden"
+          className="w-full aspect-square border rounded-xl bg-card shadow-sm flex flex-col items-center justify-center p-8 text-center transition-all duration-300 relative overflow-hidden"
           style={{
             ...backgroundStyle,
             fontFamily: fontFamily,
@@ -194,7 +194,7 @@ export default function Editor() {
       </div>
 
       {/* Controls */}
-      <div className="neu-card p-4 space-y-4">
+      <div className="border rounded-xl bg-card shadow-sm p-4 space-y-4">
         <Tabs defaultValue="text" className="w-full">
           <TabsList className="grid w-full grid-cols-4 bg-transparent gap-2 p-0 h-auto">
              <TabsTrigger value="text" className="h-10 text-xs"><Type size={16} /></TabsTrigger>
@@ -207,7 +207,7 @@ export default function Editor() {
             <div className="space-y-2">
               <label className="text-xs font-medium">Quote Text</label>
               <textarea
-                className="w-full min-h-[80px] rounded-md border-none neu-pressed p-3 text-sm focus:outline-none bg-transparent"
+                className="w-full min-h-[80px] rounded-md border bg-background p-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                 value={text}
                 onChange={(e) => setText(e.target.value)}
               />
@@ -229,7 +229,7 @@ export default function Editor() {
                    <button
                      key={font}
                      onClick={() => setFontFamily(font)}
-                     className={`p-2 text-xs rounded-lg text-left truncate ${fontFamily === font ? 'neu-pressed text-primary' : 'hover:bg-black/5'}`}
+                     className={`p-2 text-xs rounded-lg text-left truncate transition-colors ${fontFamily === font ? 'bg-secondary text-primary font-semibold' : 'hover:bg-muted'}`}
                      style={{ fontFamily: font }}
                    >
                      {font}
@@ -311,10 +311,10 @@ export default function Editor() {
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <Button variant="outline" className="neu-btn" onClick={handleRemix}>
+        <Button variant="outline" onClick={handleRemix}>
           <Shuffle size={18} className="mr-2" /> Remix
         </Button>
-        <Button onClick={handleDownload} className="neu-btn bg-primary text-primary-foreground">
+        <Button onClick={handleDownload} className="bg-primary text-primary-foreground">
           <Download size={18} className="mr-2" /> Download
         </Button>
       </div>

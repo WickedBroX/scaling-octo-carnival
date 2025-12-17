@@ -33,8 +33,8 @@ export default function Profile() {
         <p className="text-muted-foreground">Manage your account.</p>
       </div>
 
-      <div className="neu-card p-6 flex flex-col items-center space-y-4">
-        <div className="w-20 h-20 rounded-full bg-secondary neu-pressed flex items-center justify-center text-2xl font-bold text-primary">
+      <div className="border rounded-xl bg-card text-card-foreground shadow p-6 flex flex-col items-center space-y-4">
+        <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center text-2xl font-bold text-primary">
           {user.email ? user.email[0].toUpperCase() : 'G'}
         </div>
         <div className="text-center">
@@ -60,7 +60,7 @@ export default function Profile() {
         <p className="text-sm text-muted-foreground">Tap a design to edit.</p>
 
         {designs.length === 0 ? (
-          <div className="text-center py-8 text-muted-foreground text-sm neu-pressed rounded-xl">
+          <div className="text-center py-8 text-muted-foreground text-sm border border-dashed rounded-xl bg-muted/10">
              No saved designs yet.
              <Button variant="link" onClick={() => navigate('/create')}>Create one now!</Button>
           </div>
@@ -69,7 +69,7 @@ export default function Profile() {
             {designs.map(design => (
                <div
                  key={design.id}
-                 className="aspect-square neu-card overflow-hidden relative cursor-pointer group"
+                 className="aspect-square border rounded-xl bg-card overflow-hidden relative cursor-pointer group shadow-sm hover:shadow-md transition-shadow"
                  onClick={() => navigate(`/create?id=${design.id}`)}
                >
                  <div
