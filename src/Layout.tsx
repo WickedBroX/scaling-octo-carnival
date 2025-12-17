@@ -1,5 +1,5 @@
 import { Outlet, NavLink } from 'react-router-dom';
-import { Home, PlusSquare, User } from 'lucide-react';
+import { Home, PlusSquare, User, Compass } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export default function Layout() {
@@ -30,6 +30,18 @@ export default function Layout() {
             }
           >
             <Home size={24} />
+          </NavLink>
+
+          <NavLink
+            to="/discovery"
+            className={({ isActive }) =>
+              cn(
+                "flex flex-col items-center justify-center w-12 h-12 rounded-2xl transition-all duration-200",
+                isActive ? "neu-pressed text-primary" : "text-muted-foreground hover:text-primary"
+              )
+            }
+          >
+            <Compass size={24} />
           </NavLink>
 
           <NavLink

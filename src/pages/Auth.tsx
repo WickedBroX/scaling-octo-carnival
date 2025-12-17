@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardHeader, CardContent, CardFooter, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useNavigate } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
 
 export default function Auth() {
   const navigate = useNavigate();
@@ -12,10 +13,23 @@ export default function Auth() {
 
   // Mock login function
   const handleLogin = () => {
-    // In a real app, integrate Supabase here
-    localStorage.setItem('quote-flow-user', JSON.stringify({ email }));
+    // Simulate getting a User ID from backend
+    const userId = uuidv4();
+    localStorage.setItem('quote-flow-user', JSON.stringify({ email, id: userId }));
+    // Clear guest ID to prioritize logged in user, or keep it to merge?
+    // For now, simpler to just replace/ignore guest if logged in.
     navigate('/');
   };
+
+  const handleGuest = () => {
+      // Ensure guest ID exists
+      let guestId = localStorage.getItem('quote-flow-guest-id');
+      if (!guestId) {
+          guestId = uuidv4();
+          localStorage.setItem('quote-flow-guest-id', guestId);
+      }
+      navigate('/');
+  }
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[80vh] space-y-8">
@@ -79,7 +93,7 @@ export default function Auth() {
          </TabsContent>
        </Tabs>
 
-       <Button variant="ghost" onClick={() => navigate('/')}>
+       <Button variant="ghost" onClick={handleGuest}>
          Continue as Guest
        </Button>
     </div>
