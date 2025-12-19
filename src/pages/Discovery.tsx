@@ -48,7 +48,7 @@ export default function Discovery() {
   const [refreshing, setRefreshing] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState<string | null>(null);
-  const [interestMap, setInterestMap] = useState<InterestMap>(readInterestMap);
+  const [, setInterestMap] = useState<InterestMap>(readInterestMap);
   const [likedQuotes, setLikedQuotes] = useState<Set<number>>(new Set());
 
   const handleLike = async (quote: Quote) => {
@@ -132,25 +132,6 @@ export default function Discovery() {
     );
   }, [quotes, activeFilter]);
 
-  const interestLabels = useMemo(() => {
-    const ranked = Object.entries(interestMap)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 3)
-      .map(([label]) => label);
-    return ranked;
-  }, [interestMap]);
-
-  const featuredIds = useMemo(() => {
-    const ids = new Set<number>();
-    if (interestLabels.length === 0) return ids;
-    for (const quote of filteredQuotes) {
-      const label = quote.subcategory_name || quote.category_name;
-      if (label && interestLabels.includes(label) && ids.size < 4) {
-        ids.add(quote.id);
-      }
-    }
-    return ids;
-  }, [filteredQuotes, interestLabels]);
 
   const bumpInterest = (quote: Quote, delta: number) => {
     const labels = getQuoteLabels(quote);
@@ -262,43 +243,15 @@ export default function Discovery() {
         </div>
       )}
 
-      <div className="grid grid-flow-dense grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 auto-rows-[clamp(180px,22vw,280px)]">
-        {filteredQuotes.map((quote, idx) => {
-          const textLength = quote.text.length;
-          const hasInterest = interestLabels.length > 0;
-          const isFeatured =
-            featuredIds.has(quote.id) || (!hasInterest && idx % 10 === 0);
-
-          // Keep the layout Instagram-like: mostly squares + occasional larger tiles.
-          // In a 3-column grid, alternate featured and regular tiles more naturally.
-          const isWide = !isFeatured && idx % 9 === 4 && textLength < 120;
-          const isTall =
-            !isFeatured && !isWide && idx % 11 === 6 && textLength > 150;
-
-          const sizeClass = isFeatured
-            ? "col-span-2 row-span-2"
-            : isWide
-            ? "col-span-2"
-            : isTall
-            ? "row-span-2"
-            : "";
-
-          const variant = isFeatured
-            ? "featured"
-            : isWide
-            ? "wide"
-            : isTall
-            ? "tall"
-            : "default";
-
+      <div className="columns-2 lg:columns-3 gap-4 space-y-4">
+        {filteredQuotes.map((quote) => {
           const canEdit = user?.id === quote.user_id || user?.role === "admin";
 
           return (
             <ExploreQuoteTile
               key={quote.id}
               quote={quote}
-              variant={variant}
-              className={sizeClass}
+              variant="default"
               canEdit={canEdit}
               onView={handleView}
               onLike={() => handleLike(quote)}

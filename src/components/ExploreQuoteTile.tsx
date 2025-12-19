@@ -1,4 +1,4 @@
-import { useLayoutEffect, useMemo, useRef, useState, useEffect } from "react";
+import { useMemo, useRef, useState, useEffect } from "react";
 import { Edit2, Trash2, Heart, Copy as CopyIcon } from "lucide-react";
 import ShareMenu from "@/components/ShareMenu";
 import type { Quote } from "@/lib/api";
@@ -19,28 +19,8 @@ type Props = {
   onDelete?: (quote: Quote, event: React.MouseEvent) => void;
 };
 
-type FitConfig = {
-  minPx: number;
-  maxPx: number;
-  lineHeight: number;
-};
-
-const getFitConfig = (variant: Variant): FitConfig => {
-  switch (variant) {
-    case "featured":
-      return { minPx: 15, maxPx: 38, lineHeight: 1.18 };
-    case "wide":
-      return { minPx: 14, maxPx: 30, lineHeight: 1.18 };
-    case "tall":
-      return { minPx: 14, maxPx: 28, lineHeight: 1.18 };
-    default:
-      return { minPx: 13, maxPx: 26, lineHeight: 1.18 };
-  }
-};
-
 export function ExploreQuoteTile({
   quote,
-  variant,
   className,
   canEdit,
   onView,
@@ -52,10 +32,6 @@ export function ExploreQuoteTile({
 }: Props) {
   const [isFocused, setIsFocused] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const textWrapRef = useRef<HTMLDivElement | null>(null);
-  const textRef = useRef<HTMLParagraphElement | null>(null);
-
-  const config = useMemo(() => getFitConfig(variant), [variant]);
 
   // Handle click outside to reset focus
   useEffect(() => {
@@ -72,117 +48,23 @@ export function ExploreQuoteTile({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isFocused]);
 
-  useLayoutEffect(() => {
-    const wrap = textWrapRef.current;
-    const textNode = textRef.current;
-    if (!wrap || !textNode) return;
-
-    let raf = 0;
-    const schedule = () => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => {
-        const available = wrap.clientHeight;
-        if (!available) return;
-
-        // Reset clamp so we can measure natural height.
-        textNode.style.display = "block";
-        textNode.style.overflow = "visible";
-        (
-          textNode.style as unknown as { WebkitLineClamp?: string }
-        ).WebkitLineClamp = "";
-        (
-          textNode.style as unknown as { WebkitBoxOrient?: string }
-        ).WebkitBoxOrient = "";
-
-        textNode.style.lineHeight = String(config.lineHeight);
-
-        let low = config.minPx;
-        let high = config.maxPx;
-        let best = config.minPx;
-
-        // Binary search for the largest font size that fits the container height.
-        for (let i = 0; i < 7; i += 1) {
-          const mid = (low + high) / 2;
-          textNode.style.fontSize = `${mid}px`;
-
-          const fits = textNode.scrollHeight <= available + 1;
-          if (fits) {
-            best = mid;
-            low = mid;
-          } else {
-            high = mid;
-          }
-        }
-
-        textNode.style.fontSize = `${best}px`;
-
-        // If it still doesn't fit at min, clamp to the max lines that fit.
-        if (textNode.scrollHeight > available + 1) {
-          const approxLines = Math.max(
-            2,
-            Math.floor(available / (best * config.lineHeight))
-          );
-          textNode.style.display = "-webkit-box";
-          (
-            textNode.style as unknown as { WebkitBoxOrient?: string }
-          ).WebkitBoxOrient = "vertical";
-          (
-            textNode.style as unknown as { WebkitLineClamp?: string }
-          ).WebkitLineClamp = String(approxLines);
-          textNode.style.overflow = "hidden";
-        }
-      });
-    };
-
-    schedule();
-
-    // Re-fit after web fonts load to avoid late overflow/clipping.
-    if (document.fonts?.ready) {
-      document.fonts.ready.then(schedule).catch(() => undefined);
-    }
-
-    const observer =
-      typeof ResizeObserver === "undefined"
-        ? null
-        : new ResizeObserver(schedule);
-    observer?.observe(wrap);
-    if (!observer) {
-      window.addEventListener("resize", schedule, { passive: true });
-    }
-
-    return () => {
-      observer?.disconnect();
-      window.removeEventListener("resize", schedule);
-      cancelAnimationFrame(raf);
-    };
-  }, [
-    quote.text,
-    quote.font_family,
-    variant,
-    config.lineHeight,
-    config.maxPx,
-    config.minPx,
-  ]);
-
-  // Removed category metadata display
-
-  const paddingClass =
-    variant === "featured"
-      ? "p-6"
-      : variant === "wide" || variant === "tall"
-      ? "p-5"
-      : "p-4";
-
   const handleTileClick = () => {
-    // If it's a touch device or we want the smart navigation:
-    // First click shows actions (isFocused = true)
-    // Second click navigates
     if (!isFocused) {
       setIsFocused(true);
     } else {
       onView(quote);
     }
   };
+
+  // Determine font size based on text length for a dynamic feel
+  // without complex JS measuring.
+  const fontSizeClass = useMemo(() => {
+    const len = quote.text.length;
+    if (len < 50) return "text-2xl md:text-3xl";
+    if (len < 100) return "text-xl md:text-2xl";
+    if (len < 200) return "text-lg md:text-xl";
+    return "text-base md:text-lg";
+  }, [quote.text.length]);
 
   return (
     <div
@@ -198,7 +80,7 @@ export function ExploreQuoteTile({
       }}
       onMouseLeave={() => setIsFocused(false)}
       className={cn(
-        "group relative h-full w-full overflow-hidden rounded-[18px] border border-border-light dark:border-border-dark bg-white dark:bg-[#1f1f22] shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl",
+        "group relative w-full overflow-hidden rounded-[18px] border border-border-light dark:border-border-dark bg-white dark:bg-[#1f1f22] shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl break-inside-avoid mb-4",
         className
       )}
       style={{ backgroundColor: quote.background_color || "#ffffff" }}
@@ -208,34 +90,23 @@ export function ExploreQuoteTile({
         <div className="absolute -bottom-12 -left-10 h-32 w-32 rounded-full bg-black/10 blur-3xl" />
       </div>
 
-      <div
-        className={cn(
-          "relative z-10 grid h-full grid-rows-[auto_1fr_auto] gap-3 text-center",
-          paddingClass
-        )}
-      >
-        <div
-          ref={textWrapRef}
-          className="min-h-0 flex items-center justify-center px-1"
+      <div className="relative z-10 flex flex-col gap-4 p-6 text-center">
+        <p
+          className={cn("font-semibold leading-tight", fontSizeClass)}
+          style={{
+            fontFamily: quote.font_family,
+            color: quote.text_color,
+            textWrap: "balance",
+            wordBreak: "normal",
+            overflowWrap: "break-word",
+            hyphens: "none",
+          }}
         >
-          <p
-            ref={textRef}
-            className="font-semibold"
-            style={{
-              fontFamily: quote.font_family,
-              color: quote.text_color,
-              textWrap: "balance",
-              wordBreak: "normal",
-              overflowWrap: "break-word",
-              hyphens: "none",
-            }}
-          >
-            "{quote.text}"
-          </p>
-        </div>
+          "{quote.text}"
+        </p>
         <div
-          className="font-bold uppercase opacity-60 tracking-[0.16em] leading-snug text-[10px] sm:text-[11px]"
-          style={{ color: quote.text_color, textWrap: "balance" }}
+          className="font-bold uppercase opacity-60 tracking-[0.16em] leading-snug text-[10px] sm:text-[11px] mt-auto"
+          style={{ color: quote.text_color }}
         >
           {quote.author}
         </div>

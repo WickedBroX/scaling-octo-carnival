@@ -23,9 +23,11 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
           <div className="flex flex-col gap-8">
             {/* Logo */}
             <div className="px-2">
-              <h1 className="text-primary dark:text-white text-2xl font-bold tracking-tight">
-                WeTalkTo
-              </h1>
+              <img
+                src="https://res.cloudinary.com/dyr8vgzkv/image/upload/v1766175146/We_ny2cc6.png"
+                alt="WeTalkTo Logo"
+                className="h-8 w-auto object-contain"
+              />
             </div>
 
             {/* Navigation Links */}
