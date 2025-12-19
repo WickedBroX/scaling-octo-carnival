@@ -312,26 +312,53 @@ export default function QuoteView() {
   return (
     <div className="pb-24">
       {/* Quote Card */}
-      <article className="mx-4 mt-6 bg-white dark:bg-[#1f1f22] rounded-[18px] border p-6 shadow-sm overflow-hidden relative group">
+      <article
+        className="mx-4 mt-6 rounded-[18px] border p-6 md:p-8 shadow-sm overflow-hidden relative group transition-shadow duration-300"
+        style={{
+          backgroundColor: quote.background_color || "#ffffff",
+          borderColor: quote.background_color
+            ? `${quote.background_color}40`
+            : "#e4e4e7",
+        }}
+      >
         <div className="mb-6 flex items-start justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
-              {quote.author.charAt(0)}
-            </div>
-            <div>
-              <div className="font-bold text-[#18181b] dark:text-zinc-100">
-                {quote.author}
-              </div>
-              <div className="text-xs text-muted-foreground">
-                Original Quote
-              </div>
+            <div className="flex flex-col">
+              <p className="text-sm md:text-base leading-tight text-zinc-600 dark:text-zinc-300">
+                <span className="font-medium text-zinc-500 dark:text-zinc-400">
+                  Author:
+                </span>{" "}
+                {(() => {
+                  const parts = quote.author.trim().split(/\s+/).filter(Boolean);
+                  let leading = "";
+                  let last = parts[0] || "Unknown";
+
+                  if (parts.length > 1) {
+                    leading = parts.slice(0, -1).join(" ");
+                    last = parts[parts.length - 1];
+                  }
+
+                  return (
+                    <>
+                      {leading ? (
+                        <span className="font-light text-primary dark:text-white">
+                          {leading}{" "}
+                        </span>
+                      ) : null}
+                      <span className="font-semibold text-primary dark:text-white">
+                        {last}
+                      </span>
+                    </>
+                  );
+                })()}
+              </p>
             </div>
           </div>
           {canEdit && (
             <Button
               variant="outline"
               size="sm"
-              className="rounded-full"
+              className="rounded-full bg-white/50 hover:bg-white/80 border-0"
               onClick={() => navigate(`/editor?quoteId=${quote.id}`)}
             >
               Edit
@@ -341,8 +368,11 @@ export default function QuoteView() {
 
         <div className="relative mb-3">
           <h2
-            className="text-2xl md:text-3xl font-bold leading-relaxed text-[#18181b] dark:text-zinc-50 tracking-tight"
-            style={{ fontFamily: quote.font_family || "Inter, sans-serif" }}
+            className="text-2xl md:text-3xl font-bold leading-tight tracking-tight selection:bg-primary/20"
+            style={{
+              fontFamily: quote.font_family || "Inter, sans-serif",
+              color: quote.text_color || "#18181b",
+            }}
           >
             "{quote.text}"
           </h2>
