@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const path = require('path');
 const { getDb } = require('../db');
 
 const SITE_NAME = process.env.SITE_NAME || 'WeTalkTo';
@@ -130,8 +131,7 @@ function renderQuoteHtml(quote) {
         <div class="author">- ${safeAuthor}</div>
       </article>
       <div class="actions">
-        <a class="btn primary" href="/create?remix=${quote.id}">Remix this quote</a>
-        <a class="btn ghost" href="/">Open ${escapeHtml(SITE_NAME)}</a>
+        <a class="btn primary" href="/">Open ${escapeHtml(SITE_NAME)}</a>
       </div>
       <div class="footer">${escapeHtml(SITE_NAME)} · Share this quote: ${escapeHtml(url)}</div>
     </main>
@@ -140,6 +140,16 @@ function renderQuoteHtml(quote) {
 }
 
 async function handleQuotePage(req, res) {
+    // Detect Bot / Crawler vs Browser
+    const userAgent = req.get('User-Agent') || '';
+    const isBot = /bot|googlebot|crawler|spider|robot|crawling|facebookexternalhit|whatsapp/i.test(userAgent);
+
+    // If not a bot, serve the React App (SPA) to let the client handle routing
+    if (!isBot) {
+        res.sendFile(path.join(__dirname, '../../dist/index.html'));
+        return;
+    }
+
     const id = Number.parseInt(req.params.id, 10);
     if (!Number.isFinite(id)) {
         res.status(404).send(renderNotFound());
