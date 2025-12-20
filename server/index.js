@@ -119,6 +119,15 @@ async function startServer() {
                 ON CONFLICT (key) DO NOTHING
             `);
             
+            // Settings table migration
+            await db.query(`
+                CREATE TABLE IF NOT EXISTS system_settings (
+                    key VARCHAR(50) PRIMARY KEY,
+                    value TEXT,
+                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                );
+            `);
+
             console.log('Schema migrations completed.');
         } catch (migrationErr) {
             console.error('Migration error (non-fatal):', migrationErr.message);
