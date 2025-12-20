@@ -24,7 +24,7 @@ export function Sidebar({ onClose }: { onClose?: () => void }) {
             {/* Logo */}
             <div className="px-2">
               <img
-                src="https://res.cloudinary.com/dyr8vgzkv/image/upload/v1766175146/We_ny2cc6.png"
+                src="/logo.png"
                 alt="WeTalkTo Logo"
                 className="h-8 w-auto object-contain"
               />
