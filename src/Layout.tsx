@@ -48,9 +48,11 @@ export default function Layout() {
         <div className="max-w-[720px] mx-auto w-full px-4 md:px-8 py-6 flex flex-col gap-8 pb-24 md:pb-20">
           {/* Mobile Header (Visible only on small screens) */}
           <div className="flex md:hidden justify-between items-center mb-2">
-            <h1 className="text-primary dark:text-white text-xl font-bold tracking-tight">
-              WeTalkTo
-            </h1>
+            <img
+              src="/logo.png"
+              alt="WeTalkTo"
+              className="h-12 w-auto object-contain"
+            />
             <button
               onClick={() => setMobileMenuOpen(true)}
               className="p-2 bg-white dark:bg-zinc-800 rounded-full shadow-sm text-primary dark:text-white active:scale-95 transition-all duration-200"
