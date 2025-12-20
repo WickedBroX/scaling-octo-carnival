@@ -80,19 +80,21 @@ export function ExploreQuoteTile({
       }}
       onMouseLeave={() => setIsFocused(false)}
       className={cn(
-        "group relative w-full overflow-hidden rounded-[18px] border border-border-light dark:border-border-dark bg-white dark:bg-[#1f1f22] shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl break-inside-avoid mb-4",
+        "group relative w-full aspect-square rounded-[18px] border border-border-light dark:border-border-dark bg-white dark:bg-[#1f1f22] shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl break-inside-avoid",
         className
       )}
       style={{ backgroundColor: quote.background_color || "#ffffff" }}
     >
-      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity">
-        <div className="absolute -top-12 -right-12 h-40 w-40 rounded-full bg-white/30 blur-3xl" />
-        <div className="absolute -bottom-12 -left-10 h-32 w-32 rounded-full bg-black/10 blur-3xl" />
+      <div className="absolute inset-0 overflow-hidden rounded-[18px] pointer-events-none">
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity">
+          <div className="absolute -top-12 -right-12 h-40 w-40 rounded-full bg-white/30 blur-3xl" />
+          <div className="absolute -bottom-12 -left-10 h-32 w-32 rounded-full bg-black/10 blur-3xl" />
+        </div>
       </div>
 
-      <div className="relative z-10 flex flex-col gap-4 p-6 text-center">
+      <div className="relative z-10 flex flex-col justify-center items-center h-full p-6 text-center">
         <p
-          className={cn("font-semibold leading-tight", fontSizeClass)}
+          className={cn("font-semibold leading-tight mb-2", fontSizeClass)}
           style={{
             fontFamily: quote.font_family,
             color: quote.text_color,
@@ -105,7 +107,7 @@ export function ExploreQuoteTile({
           "{quote.text}"
         </p>
         <div
-          className="font-bold uppercase opacity-60 tracking-[0.16em] leading-snug text-[10px] sm:text-[11px] mt-auto"
+          className="font-bold uppercase opacity-60 tracking-[0.16em] leading-snug text-[10px] sm:text-[11px] mt-4"
           style={{ color: quote.text_color }}
         >
           {quote.author}
