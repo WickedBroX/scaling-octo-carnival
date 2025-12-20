@@ -95,6 +95,18 @@ const widgetKeySchema = z.object({
     params: z.object({ key: z.string().trim().min(1).max(50) }),
 });
 
+const settingsSchema = z.object({
+    body: z.object({
+        smtp_host: z.string().trim().optional(),
+        smtp_port: z.string().trim().optional(),
+        smtp_user: z.string().trim().optional(),
+        smtp_pass: z.string().trim().optional(),
+        smtp_from: z.string().trim().optional(),
+    }),
+    query: z.object({}).passthrough(),
+    params: z.object({}).passthrough(),
+});
+
 // GET /api/admin/stats - Aggregate counts
 router.get('/stats', async (req, res) => {
     try {
@@ -404,6 +416,54 @@ router.put('/widgets/:key', adminMiddleware, validate(widgetKeySchema), async (r
     } catch (error) {
         console.error('Error updating widget:', error);
         res.status(500).json({ error: 'Failed to update widget' });
+    }
+});
+
+// --- System Settings (SMTP) ---
+
+// GET /api/admin/settings - Get all system settings
+router.get('/settings', adminMiddleware, async (req, res) => {
+    const pool = await getDb();
+    try {
+        const result = await pool.query("SELECT key, value FROM system_settings WHERE key IN ('smtp_host', 'smtp_port', 'smtp_user', 'smtp_pass', 'smtp_from')");
+        const settings = {};
+        result.rows.forEach(row => {
+            settings[row.key] = row.value;
+        });
+        res.json(settings);
+    } catch (error) {
+        console.error('Error fetching settings:', error);
+        res.status(500).json({ error: 'Failed to fetch settings' });
+    }
+});
+
+// POST /api/admin/settings - Update system settings
+router.post('/settings', adminMiddleware, validate(settingsSchema), async (req, res) => {
+    const pool = await getDb();
+    const settings = req.validated.body;
+
+    try {
+        await pool.query('BEGIN');
+
+        for (const [key, value] of Object.entries(settings)) {
+            if (value !== undefined) {
+                // Upsert settings
+                await pool.query(
+                    `INSERT INTO system_settings (key, value)
+                     VALUES ($1, $2)
+                     ON CONFLICT (key)
+                     DO UPDATE SET value = $2, updated_at = CURRENT_TIMESTAMP`,
+                    [key, value]
+                );
+            }
+        }
+
+        await pool.query('COMMIT');
+        res.json({ message: 'Settings updated successfully' });
+    } catch (error) {
+        await pool.query('ROLLBACK');
+        console.error('Error updating settings:', error);
+        res.status(500).json({ error: 'Failed to update settings' });
     }
 });
 

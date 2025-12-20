@@ -15,6 +15,7 @@ import {
   LogOut,
   ChevronRight,
   Settings2,
+  Settings,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -35,6 +36,7 @@ export default function AdminLayout() {
     { icon: Users, label: "Users", path: "/admin/users" },
     { icon: Layers, label: "Categories", path: "/admin/categories" },
     { icon: Settings2, label: "Widgets", path: "/admin/widgets" },
+    { icon: Settings, label: "Settings", path: "/admin/settings" },
   ];
 
   return (

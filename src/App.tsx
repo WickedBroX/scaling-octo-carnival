@@ -14,6 +14,7 @@ import QuotesManager from "./pages/admin/QuotesManager";
 import UsersManager from "./pages/admin/UsersManager";
 import CategoryManager from "./pages/admin/CategoryManager";
 import WidgetManager from "./pages/admin/WidgetManager";
+import { SettingsManager } from "./pages/admin/SettingsManager";
 import ScrollToTop from "./components/ScrollToTop";
 
 function App() {
@@ -43,6 +44,7 @@ function App() {
           <Route path="users" element={<UsersManager />} />
           <Route path="categories" element={<CategoryManager />} />
           <Route path="widgets" element={<WidgetManager />} />
+          <Route path="settings" element={<SettingsManager />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />
